@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Diario Digitale Accessibile</title>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <div class="app-container">
+            <header class="app-header">
+
+                <div class="top-bar">
+                    <div class="brand">
+                        <span class="brand-icon">📓</span>
+                        <h1>Il mio diario</h1>
+                    </div>
+                    <div class="date-banner">
+                        <span class="calendar-icon">📅</span>
+                        <div class="date-text">
+                            <h2>Oggi è Venerdì</h2>
+                            <p>19 giugno 2026</p>
+                        </div>
+                    </div>
+                </div>
+
+                <nav class="main-menu-container">
+                    <span class="menu-label">Menu:</span>
+                    <div class="menu-buttons">
+                        <button class="menu-btn active" id="ricordi" data-view="home">
+                            <span class="btn-icon">📖</span>
+                            <span class="btn-text">I miei ricordi</span>
+                        </button>
+                        <button class="menu-btn" id="emozioni" data-view="emozioni">
+                            <span class="btn-icon">😊</span>
+                            <span class="btn-text">Come mi sento</span>
+                        </button>
+                        <button class="menu-btn" id="persone" data-view="persone">
+                            <span class="btn-icon">👥</span>
+                            <span class="btn-text">Le mie persone</span>
+                        </button>
+                        <button class="menu-btn" id="passioni" data-view="passioni">
+                            <span class="btn-icon">⭐</span>
+                            <span class="btn-text">Le mie passioni</span>
+                        </button>
+                        <button class="menu-btn" id="aiuto" data-view="aiuto">
+                            <span class="btn-icon">❓</span>
+                            <span class="btn-text">Aiuto</span>
+                        </button>
+                    </div>
+                </nav>
+            </header>
+
+            <main id="main-content" class="main-content">
+                <!-- VISTA HOME -->
+                <div id="view-home" class="view-section active">
+                    <div class="dashboard-grid">
+                        
+                        <!-- CARD DELLA MATTINA -->
+                        <section class="time-card card-morning">
+                            <h2 class="card-title">Mattina</h2>
+                            <div class="card-illustration">
+                                <span class="icon-3d">☕</span>
+                            </div>
+                            <button class="add-memory-btn" data-fascia="Mattina">
+                                + Nuovo ricordo
+                            </button>
+                        </section>
+
+                        <!-- CARD DEL POMERIGGIO -->
+                        <section class="time-card card-afternoon">
+                            <h2 class="card-title">Pomeriggio</h2>
+                            <div class="card-illustration">
+                                <span class="icon-3d">🌳</span>
+                            </div>
+                            <button class="add-memory-btn" data-fascia="Pomeriggio">
+                                + Nuovo ricordo
+                            </button>
+                        </section>
+
+                        <!-- CARD DELLA SERA -->
+                        <section class="time-card card-evening">
+                            <h2 class="card-title">Sera</h2>
+                            <div class="card-illustration">
+                                <span class="icon-3d">🌙</span>
+                            </div>
+                            <button class="add-memory-btn" data-fascia="Sera">
+                                + Nuovo ricordo
+                            </button>
+                        </section>
+
+                    </div>
+                </div>
+
+                <!-- VISTA CREA RICORDO -->
+                <div id="view-create-memory" class="view-section hidden">
+                    <div class="page-sub-header">
+                        <button class="btn-go-home" id="btn-back-to-home"> 
+                            ‹ 🏠 Home 
+                        </button>
+                        <h2 class="page-title">Scrivi il tuo ricordo</h2>
+                    </div>
+
+                    <div class="input-toolbar">
+                        <button class="tool-btn active" id="btn-mode-keyboard">
+                            <span class="tool-icon">⌨️</span> Usa la tastiera
+                        </button>
+                        <button class="tool-btn" id="btn-mode-voice">
+                            <span class="tool-icon">🎙️</span> Usa la voce
+                        </button>
+                        <button class="tool-btn" id="btn-mode-image">
+                            <span class="tool-icon">📷</span> Aggiungi immagine
+                        </button>
+                        <button class="tool-btn tool-help" id="btn-mode-help">
+                            <span class="help-icon">?</span> Aiuto
+                        </button>
+                    </div>
+
+                    <div class="sub-header-info">
+                        <p><strong>+ Aggiungi nuovo ricordo</strong> · <span id="current-fascia-text" class="highlight-fascia">Mattina</span></p>
+                    </div>
+
+                    <div class="text-area-container">
+                        <textarea id="memory-text-input" placeholder="Scrivi qui il tuo ricordo... ✨"></textarea>
+                    </div>
+
+                    <div class="editor-actions">
+                        <button class="action-btn btn-back" id="btn-cancel-memory">
+                            ‹ Indietro
+                        </button>
+                        <button class="action-btn btn-save" id="btn-save-memory">
+                            💾 Salva
+                        </button>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+
+        <script src="javascript/app.js"></script>
+    </body>
+</html>
