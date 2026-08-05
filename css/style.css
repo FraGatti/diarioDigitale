@@ -1,3 +1,6 @@
+/* ==========================================
+   1. RESET E STILE DI BASE (ACCESSIBILITÀ)
+   ========================================== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -9,7 +12,7 @@ body {
   background-color: #eef2f6;
   color: #2b364b;
   height: 100vh;
-  overflow: hidden; /*No-Scroll */
+  overflow: hidden; /* Principio No-Scroll */
 }
 
 .app-container {
@@ -21,6 +24,9 @@ body {
   padding: 15px;
 }
 
+/* ==========================================
+   2. INTESTAZIONE FISSA & BANNER DATA
+   ========================================== */
 .app-header {
   display: flex;
   flex-direction: column;
@@ -80,7 +86,9 @@ body {
   font-weight: 600;
 }
 
-/*MENU NAVIGAZIONE*/
+/* ==========================================
+   3. MENU DI NAVIGAZIONE STATICO
+   ========================================== */
 .main-menu-container {
   display: flex;
   align-items: center;
@@ -126,8 +134,9 @@ body {
   font-size: 1.2rem;
 }
 
-/* AREA DINAMICA & HOME GRID */
-
+/* ==========================================
+   4. AREA DINAMICA & HOME GRID (MOCKUP 1)
+   ========================================== */
 .main-content {
   flex: 1;
   display: flex;
@@ -197,8 +206,9 @@ body {
   transform: scale(0.98);
 }
 
-/* 5. SCHERMATA CREA RICORDO */
-
+/* ==========================================
+   5. SCHERMATA I MIEI RICORDI (MOCKUP 4)
+   ========================================== */
 .page-sub-header {
   display: flex;
   align-items: center;
@@ -223,6 +233,88 @@ body {
   color: #0f172a;
 }
 
+.ricordi-categories-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.cat-btn {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #1e293b;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.cat-morning { background-color: #fffbeb; border: 2px solid #fde68a; }
+.cat-afternoon { background-color: #f0fdf4; border: 2px solid #bbf7d0; }
+.cat-evening { background-color: #f5f3ff; border: 2px solid #ddd6fe; }
+
+.cat-icon { font-size: 1.8rem; }
+
+.ricordi-subtitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 12px;
+}
+
+.ricordi-recent-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  flex: 1;
+}
+
+.recent-card {
+  background-color: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 140px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+}
+
+.card-date {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.card-emoji { font-size: 2.8rem; }
+.card-emoji-placeholder { font-size: 1rem; color: #ef4444; font-weight: 600; }
+
+.ricordi-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+
+.btn-more-memories {
+  background-color: #e2e8f0;
+  border: 2px solid #cbd5e1;
+  padding: 12px 24px;
+  border-radius: 14px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #334155;
+  cursor: pointer;
+}
+
+/* ==========================================
+   6. SCHERMATA CREA RICORDO
+   ========================================== */
 .input-toolbar {
   display: flex;
   gap: 12px;
@@ -249,9 +341,7 @@ body {
   color: #ffffff;
 }
 
-.tool-help {
-  margin-left: auto;
-}
+.tool-help { margin-left: auto; }
 
 .sub-header-info {
   font-size: 1.1rem;
@@ -307,4 +397,153 @@ body {
   background-color: #4ade80;
   color: #14532d;
   border: 2px solid #22c55e;
+}
+
+/* ==========================================
+   7. SCHERMATA EMOZIONI (NO-SCROLL OPTIMIZED)
+   ========================================== */
+.section-instruction {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 10px;
+}
+
+.emozioni-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 12px;
+  flex: 1;
+  max-height: calc(100vh - 280px);
+}
+
+.emotion-card {
+  background-color: #ffffff;
+  border: 2px solid #cbd5e1;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  cursor: pointer;
+  height: 100%;
+}
+
+.emotion-card:active { transform: scale(0.96); }
+
+.emotion-icon {
+  font-size: 2.2rem;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.emotion-label {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+/* ==========================================
+   8. SCHERMATE PERSONE, PASSIONI, AIUTO
+   ========================================== */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.person-card, .hobby-card {
+  background-color: #ffffff;
+  border: 2px solid #cbd5e1;
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+
+.avatar-placeholder, .hobby-icon {
+  font-size: 3.5rem;
+  margin-bottom: 10px;
+}
+
+.person-name, .hobby-name {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.person-role {
+  font-size: 1rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.add-card-button {
+  background-color: #f1f5f9;
+  border: 2px dashed #94a3b8;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+}
+
+.add-card-button .plus-icon {
+  font-size: 2rem;
+  margin-bottom: 5px;
+}
+
+.aiuto-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 800px;
+}
+
+.help-box {
+  background-color: #ffffff;
+  border: 2px solid #cbd5e1;
+  border-radius: 20px;
+  padding: 25px;
+}
+
+.help-box h3 {
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+  color: #1e293b;
+}
+
+.help-box p {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #334155;
+}
+
+.call-caregiver-btn {
+  background-color: #ef4444;
+  color: #ffffff;
+  border: none;
+  padding: 18px;
+  border-radius: 16px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* Emozione selezionata dall'utente */
+.emotion-card.selected-emotion {
+  border: 4px solid #2563eb;
+  background-color: #eff6ff;
+  transform: scale(1.03);
 }
