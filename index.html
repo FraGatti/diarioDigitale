@@ -19,8 +19,8 @@
                 <div class="date-banner">
                     <span class="calendar-icon">📅</span>
                     <div class="date-text">
-                        <h2>Oggi è Martedì</h2>
-                        <p>4 agosto 2026</p>
+                        <h2>Oggi è Mercoledì</h2>
+                        <p>5 agosto 2026</p>
                     </div>
                 </div>
             </div>
@@ -55,7 +55,7 @@
         <!-- AREA DINAMICA CENTRALE -->
         <main id="main-content" class="main-content">
             
-            <!-- 1. VISTA HOME (PULITA - MOCKUP 1) -->
+            <!-- 1. VISTA HOME -->
             <div id="view-home" class="view-section hidden">
                 <div class="dashboard-grid">
                     
@@ -92,7 +92,7 @@
                 </div>
             </div>
 
-            <!-- 2. VISTA I MIEI RICORDI (MOCKUP 4) -->
+            <!-- 2. VISTA I MIEI RICORDI -->
             <div id="view-ricordi" class="view-section active">
                 <div class="page-sub-header">
                     <button class="btn-go-home">‹ 🏠 Home</button>
@@ -127,7 +127,38 @@
                 </div>
             </div>
 
-            <!-- 3. VISTA CREA RICORDO -->
+            <!-- 3. VISTA LEGGI RICORDO (DETTAGLIO RICORDO CLICCATO) -->
+            <div id="view-read-memory" class="view-section hidden">
+                <div class="page-sub-header">
+                    <button class="btn-go-home">‹ 🏠 Home</button>
+                    <h2 class="page-title" id="read-memory-title">Il tuo ricordo</h2>
+                </div>
+
+                <div class="read-memory-card">
+                    <div class="read-memory-header">
+                        <span id="read-memory-badge" class="memory-badge">Mattina</span>
+                        <span id="read-memory-date" class="memory-date">📅 5 agosto 2026</span>
+                        <span id="read-memory-emoji" class="memory-emoji-display">😊</span>
+                    </div>
+                    
+                    <div class="read-memory-body">
+                        <p id="read-memory-text" class="full-memory-text">
+                            Caricamento testo del ricordo...
+                        </p>
+                    </div>
+                </div>
+
+                <div class="read-memory-actions">
+                    <button class="tool-btn" id="btn-read-aloud">
+                        🔊 Ascolta ricordo
+                    </button>
+                    <button class="tool-btn active-ia" id="btn-simplify-ia">
+                        ✨ Semplifica con IA (Easy-Read)
+                    </button>
+                </div>
+            </div>
+
+            <!-- 4. VISTA CREA RICORDO -->
             <div id="view-create-memory" class="view-section hidden">
                 <div class="page-sub-header">
                     <button class="btn-go-home" id="btn-back-to-home"> 
@@ -169,23 +200,23 @@
                 </div>
             </div>
 
-            <!-- 4. VISTA COME MI SENTO (EMOZIONI - NO-SCROLL) -->
+            <!-- 5. VISTA COME MI SENTO (EMOZIONI) -->
             <div id="view-emozioni" class="view-section hidden">
                 <div class="page-sub-header">
                     <button class="btn-go-home">‹ 🏠 Home</button>
                     <h2 class="page-title">Come mi sento oggi?</h2>
                 </div>
             
-                <p class="section-instruction">Clicca sulla faccina che descrive come ti senti in questo momento:</p>
+                <p class="section-instruction">Tocca la faccina che descrive come ti senti in questo momento:</p>
             
                 <div class="emozioni-grid">
                     <button class="emotion-card happy" data-emotion="😊">
                         <span class="emotion-icon">😊</span>
                         <span class="emotion-label">Felice</span>
                     </button>
-                    <button class="emotion-card calm" data-emotion="😝">
-                        <span class="emotion-icon">😝</span>
-                        <span class="emotion-label">Divertito</span>
+                    <button class="emotion-card calm" data-emotion="😌">
+                        <span class="emotion-icon">😌</span>
+                        <span class="emotion-label">Calmo</span>
                     </button>
                     <button class="emotion-card tired" data-emotion="😴">
                         <span class="emotion-icon">😴</span>
@@ -218,64 +249,31 @@
                 </div>
             </div>
 
-            <!-- 5. VISTA LE MIE PERSONE -->
+            <!-- 6. VISTA LE MIE PERSONE -->
             <div id="view-persone" class="view-section hidden">
                 <div class="page-sub-header">
                     <button class="btn-go-home">‹ 🏠 Home</button>
                     <h2 class="page-title">Le mie persone care</h2>
                 </div>
 
-                <div class="cards-grid">
-                    <div class="person-card">
-                        <div class="avatar-placeholder">👩‍⚕️</div>
-                        <h3 class="person-name">Maria</h3>
-                        <p class="person-role">Educatrice</p>
-                    </div>
-                    <div class="person-card">
-                        <div class="avatar-placeholder">👵</div>
-                        <h3 class="person-name">Elena</h3>
-                        <p class="person-role">Mamma</p>
-                    </div>
-                    <div class="person-card">
-                        <div class="avatar-placeholder">👨‍🦱</div>
-                        <h3 class="person-name">Marco</h3>
-                        <p class="person-role">Amico</p>
-                    </div>
-                    <button class="add-card-button">
-                        <span class="plus-icon">+</span>
-                        <span>Aggiungi Persona</span>
-                    </button>
+                <div class="cards-grid" id="persone-list-container">
+                    <!-- Popolato dinamicamente da JS -->
                 </div>
             </div>
 
-            <!-- 6. VISTA LE MIE PASSIONI -->
+            <!-- 7. VISTA LE MIE PASSIONI -->
             <div id="view-passioni" class="view-section hidden">
                 <div class="page-sub-header">
                     <button class="btn-go-home">‹ 🏠 Home</button>
                     <h2 class="page-title">Le mie passioni</h2>
                 </div>
 
-                <div class="cards-grid">
-                    <div class="hobby-card">
-                        <span class="hobby-icon">🎨</span>
-                        <h3 class="hobby-name">Disegnare</h3>
-                    </div>
-                    <div class="hobby-card">
-                        <span class="hobby-icon">🎵</span>
-                        <h3 class="hobby-name">Ascoltare Musica</h3>
-                    </div>
-                    <div class="hobby-card">
-                        <span class="hobby-icon">⚽</span>
-                        <h3 class="hobby-name">Calcio</h3>
-                    </div>
-                    <button class="add-card-button">
-                        <span class="plus-icon">+</span>
-                        <span>Aggiungi Passione</span>
-                    </button>
+                <div class="cards-grid" id="passioni-list-container">
+                    <!-- Popolato dinamicamente da JS -->
                 </div>
             </div>
 
-            <!-- 7. VISTA AIUTO -->
+            <!-- 8. VISTA AIUTO -->
             <div id="view-aiuto" class="view-section hidden">
                 <div class="page-sub-header">
                     <button class="btn-go-home">‹ 🏠 Home</button>
@@ -285,8 +283,8 @@
                 <div class="aiuto-container">
                     <div class="help-box">
                         <h3>📖 Come funziona il diario?</h3>
-                        <p>1. Clicca su <strong>+ Nuovo ricordo</strong> per raccontare la tua giornata.</p>
-                        <p>2. Puoi usare la tastiera o la tua voce per parlare.</p>
+                        <p>1. Clicca su <strong>+ Nuovo ricordo</strong> nella  Home 🏠 per raccontare la tua giornata.</p>
+                        <p>2. Puoi usare la tastiera ⌨️ o la tua voce 🗣️ per scrivere il nuovo ricordo.</p>
                         <p>3. Premi il tasto verde <strong>Salva</strong> quando hai finito.</p>
                     </div>
                     <button class="call-caregiver-btn">
@@ -296,6 +294,35 @@
             </div>
 
         </main>
+
+        <!-- MODAL / POP-UP CUSTOM (NASCOSTA DI DEFAULT CON LA CLASSE "hidden") -->
+        <div id="custom-modal" class="modal-overlay hidden">
+            <div class="modal-card">
+                <h3 class="modal-title" id="modal-title">Aggiungi Elemento</h3>
+                
+                <div class="modal-body">
+                    <div class="input-field-group">
+                        <label for="modal-input-title" id="modal-label-1">Nome:</label>
+                        <input type="text" id="modal-input-title" placeholder="Es. Giuseppe" autocomplete="off">
+                    </div>
+                    
+                    <div class="input-field-group" id="group-role-input">
+                        <label for="modal-input-subtitle">Ruolo / Relazione:</label>
+                        <input type="text" id="modal-input-subtitle" placeholder="Es. Zio, Volontario..." autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="action-btn btn-back" id="btn-modal-cancel">
+                        Annulla
+                    </button>
+                    <button class="action-btn btn-save" id="btn-modal-confirm">
+                        ➕ Aggiungi
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script src="javascript/app.js"></script>
