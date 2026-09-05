@@ -1,5 +1,5 @@
 import { GEMINI_API_KEY } from './config.js';
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.7-flash:generateContent?key=${GEMINI_API_KEY}`;
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 /**
  * Analizza il testo, corregge errori, estrae persone/passioni, genera l'alert emotivo e consiglia la palette
