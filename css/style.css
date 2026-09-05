@@ -369,6 +369,44 @@ body {
 .card-emoji { font-size: 2.4rem; }
 .card-emoji-placeholder { font-size: 0.95rem; color: #ef4444; font-weight: 600; }
 
+/* Barra di Navigazione Paginata (No-Scroll) */
+.ricordi-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 6px;
+}
+
+.btn-page-nav {
+  background-color: #ffffff;
+  border: 2px solid #cbd5e1;
+  padding: 8px 18px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-page-nav:hover:not(:disabled) {
+  background-color: #eff6ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+}
+
+.btn-page-nav:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.page-indicator-text {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
 /* ==========================================
    6. SCHERMATA CREA RICORDO (ZERO-SCROLL)
    ========================================== */

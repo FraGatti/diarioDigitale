@@ -1,4 +1,4 @@
-const GEMINI_API_KEY = "AQ.Ab8RN6KctNn5lMwYgZ3XnhdgXUBsBW1KoVVrM22G6FJm8clIRw";
+import { GEMINI_API_KEY } from './config.js';
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.7-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 /**

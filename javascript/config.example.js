@@ -1,0 +1,1 @@
+export const GEMINI_API_KEY = "INSERISCI_QUI_LA_TUA_CHIAVE";

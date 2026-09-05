@@ -90,7 +90,7 @@
             </div>
 
             <!-- 2. VISTA I MIEI RICORDI -->
-            <div id="view-ricordi" class="view-section active">
+            <div id="view-ricordi" class="view-section hidden">
                 <div class="ricordi-categories-grid">
                     <button class="cat-btn cat-morning" data-filter="Mattina" type="button">
                         <span class="cat-icon">☕</span>
@@ -107,8 +107,15 @@
                 </div>
 
                 <h3 class="ricordi-subtitle">Ricordi recenti:</h3>
-                <div class="ricordi-recent-grid" id="memories-list-container">
-                    <!-- Popolato dinamicamente da app.js -->
+                
+                <!-- Contenitore delle 3 Card -->
+                <div class="ricordi-recent-grid" id="memories-list-container"></div>
+
+                <!-- Barra Paginazione Ricordi -->
+                <div class="ricordi-footer">
+                    <button class="btn-page-nav" id="btn-prev-page" type="button">‹ Precedenti</button>
+                    <span id="page-indicator" class="page-indicator-text">Pagina 1 di 1</span>
+                    <button class="btn-page-nav" id="btn-next-page" type="button">Successivi ›</button>
                 </div>
             </div>
 
@@ -171,7 +178,7 @@
                 </div>
 
                 <div class="editor-actions">
-                    <button class="action-btn btn-back" id="btn-cancel-memory" type="button">‹ Indietro</button>
+                    <button class="action-btn btn-back" id="btn-cancel-memory" type="button">‹ Annulla</button>
                     <button class="action-btn btn-save" id="btn-save-memory" type="button">💾 Salva</button>
                 </div>
             </div>

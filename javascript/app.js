@@ -23,6 +23,10 @@ let ricordoApertoId = null;
 let currentImageBase64 = null;
 let activeModalType = null;
 
+// Stato paginazione ricordi (No-Scroll: 3 per pagina)
+let paginaCorrenteRicordi = 0;
+const ELEMENTI_PER_PAGINA = 3;
+
 // Aggiorna data dinamica
 function setCurrentData() {
   const oggi = new Date();
@@ -72,9 +76,13 @@ function showViewById(idView) {
   if (idView === 'view-passioni') renderPassioni();
 }
 
-// Rendering Ricordi
+// Rendering Ricordi Paginato (Max 3 per schermata a zero-scroll)
 function renderSavedMemories() {
   const listContainer = document.getElementById('memories-list-container');
+  const btnPrev = document.getElementById('btn-prev-page');
+  const btnNext = document.getElementById('btn-next-page');
+  const pageIndicator = document.getElementById('page-indicator');
+
   if (!listContainer) return;
 
   let memories = getMemories();
@@ -82,6 +90,11 @@ function renderSavedMemories() {
   if (filtroFasciaAttivo) {
     memories = memories.filter(m => m.fascia === filtroFasciaAttivo);
   }
+
+  const totalePagine = Math.ceil(memories.length / ELEMENTI_PER_PAGINA) || 1;
+
+  if (paginaCorrenteRicordi >= totalePagine) paginaCorrenteRicordi = totalePagine - 1;
+  if (paginaCorrenteRicordi < 0) paginaCorrenteRicordi = 0;
 
   if (memories.length === 0) {
     const messaggioFiltro = filtroFasciaAttivo 
@@ -94,10 +107,16 @@ function renderSavedMemories() {
           <span class="card-emoji">📝</span>
       </div>
     `;
+
+    if (pageIndicator) pageIndicator.textContent = "Pagina 1 di 1";
+    if (btnPrev) btnPrev.disabled = true;
+    if (btnNext) btnNext.disabled = true;
     return;
   }
 
-  const recenti = memories.slice(0, 3);
+  // Estrazione tranche di 3 ricordi
+  const inizio = paginaCorrenteRicordi * ELEMENTI_PER_PAGINA;
+  const recenti = memories.slice(inizio, inizio + ELEMENTI_PER_PAGINA);
 
   listContainer.innerHTML = recenti.map(m => `
     <div class="recent-card clickable-card" data-id="${m.id}" style="cursor:pointer;">
@@ -105,6 +124,11 @@ function renderSavedMemories() {
       <span class="card-emoji">${m.emozione ? m.emozione : '😊'}</span>
     </div>
   `).join('');
+
+  // Aggiornamento stato controlli paginazione
+  if (pageIndicator) pageIndicator.textContent = `Pagina ${paginaCorrenteRicordi + 1} di ${totalePagine}`;
+  if (btnPrev) btnPrev.disabled = paginaCorrenteRicordi === 0;
+  if (btnNext) btnNext.disabled = paginaCorrenteRicordi >= totalePagine - 1;
 
   document.querySelectorAll('.clickable-card').forEach(card => {
     card.addEventListener('click', (e) => {
@@ -153,18 +177,18 @@ function renderPersone() {
   const persone = getPersone();
   let cardsHtml = persone.map(p => `
     <div class="person-card">
-      <div class="avatar-placeholder" style="font-size: 3rem;">${p.emoji}</div>
+      <div class="avatar-placeholder">${p.emoji}</div>
       <h3 class="person-name">${p.nome}</h3>
       <p class="person-role">${p.ruolo}</p>
-      <button class="tool-btn btn-speak-item" data-text="${p.nome}, ${p.ruolo}" style="margin-top: 8px; padding: 6px 12px; font-size: 0.9rem;">
+      <button class="tool-btn btn-speak-item" data-text="${p.nome}, ${p.ruolo}">
         🔊 Ascolta
       </button>
     </div>
   `).join('');
 
   cardsHtml += `
-    <button class="add-card-button" id="btn-add-persona" style="cursor:pointer; min-height: 140px; border: 2px dashed #cbd5e1; border-radius: 18px; background: white; font-weight: bold; font-size: 1.1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
-      <span class="plus-icon" style="font-size: 2rem;">+</span>
+    <button class="add-card-button" id="btn-add-persona">
+      <span class="plus-icon">+</span>
       <span>Aggiungi Persona</span>
     </button>
   `;
@@ -187,17 +211,17 @@ function renderPassioni() {
   const passioni = getPassioni();
   let cardsHtml = passioni.map(p => `
     <div class="hobby-card">
-      <span class="hobby-icon" style="font-size: 3rem;">${p.emoji}</span>
+      <span class="hobby-icon">${p.emoji}</span>
       <h3 class="hobby-name">${p.nome}</h3>
-      <button class="tool-btn btn-speak-item" data-text="${p.nome}" style="margin-top: 8px; padding: 6px 12px; font-size: 0.9rem;">
+      <button class="tool-btn btn-speak-item" data-text="${p.nome}">
         🔊 Ascolta
       </button>
     </div>
   `).join('');
 
   cardsHtml += `
-    <button class="add-card-button" id="btn-add-passione" style="cursor:pointer; min-height: 140px; border: 2px dashed #cbd5e1; border-radius: 18px; background: white; font-weight: bold; font-size: 1.1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
-      <span class="plus-icon" style="font-size: 2rem;">+</span>
+    <button class="add-card-button" id="btn-add-passione">
+      <span class="plus-icon">+</span>
       <span>Aggiungi Passione</span>
     </button>
   `;
@@ -264,7 +288,11 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.menu-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const viewTarget = btn.getAttribute('data-view');
-      if (viewTarget === 'ricordi') filtroFasciaAttivo = null;
+      if (viewTarget === 'ricordi') {
+        filtroFasciaAttivo = null;
+        paginaCorrenteRicordi = 0;
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active-filter'));
+      }
       showViewById(`view-${viewTarget}`);
     });
   });
@@ -273,6 +301,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.cat-btn').forEach(catBtn => {
     catBtn.addEventListener('click', (e) => {
       const fasciaSelezionata = e.currentTarget.getAttribute('data-filter');
+      paginaCorrenteRicordi = 0; // Reset alla prima pagina al cambio filtro
+
       if (filtroFasciaAttivo === fasciaSelezionata) {
         filtroFasciaAttivo = null;
         document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active-filter'));
@@ -283,6 +313,19 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       renderSavedMemories();
     });
+  });
+
+  // Paginazione Ricordi (Precedenti / Successivi)
+  document.getElementById('btn-prev-page')?.addEventListener('click', () => {
+    if (paginaCorrenteRicordi > 0) {
+      paginaCorrenteRicordi--;
+      renderSavedMemories();
+    }
+  });
+
+  document.getElementById('btn-next-page')?.addEventListener('click', () => {
+    paginaCorrenteRicordi++;
+    renderSavedMemories();
   });
 
   // Selezione Emozioni
@@ -402,6 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (previewWrapper) previewWrapper.classList.add('hidden');
       
       filtroFasciaAttivo = null;
+      paginaCorrenteRicordi = 0; // Mostra i più recenti in prima pagina
       showViewById('view-ricordi');
 
       // Notifica Toast motivazionale di Gemini
@@ -411,6 +455,8 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error("Errore durante il salvataggio:", err);
       saveMemory(fasciaCorrente, testoDaSalvare, emozioneSelezionataOggi, currentImageBase64);
       if (inputTesto) inputTesto.value = '';
+      filtroFasciaAttivo = null;
+      paginaCorrenteRicordi = 0;
       showViewById('view-ricordi');
       showToastAlert("Ricordo salvato!", "💾");
     } finally {
