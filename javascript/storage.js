@@ -77,6 +77,18 @@ export function updateMemoryText(id, nuovoTesto) {
   }
 }
 
+export function deleteMemory(id) {
+  try {
+    const memories = getMemories();
+    const filteredMemories = memories.filter(m => m.id !== id);
+    localStorage.setItem('diario_ricordi', JSON.stringify(filteredMemories));
+    return true;
+  } catch (e) {
+    console.error("Errore cancellazione ricordo:", e);
+    return false;
+  }
+}
+
 // --- PERSONE ---
 
 export function getPersone() {
@@ -84,6 +96,7 @@ export function getPersone() {
     const persone = localStorage.getItem('diario_persone');
     return persone ? JSON.parse(persone) : [];
   } catch (e) {
+    console.error("Errore lettura persone dal LocalStorage:", e);
     return [];
   }
 }
@@ -108,6 +121,18 @@ export function addPersona(nome, ruolo = 'Caregiver/Amico', emoji = '👤') {
   return true;
 }
 
+export function deletePersona(id) {
+  try {
+    const persone = getPersone();
+    const filteredPersone = persone.filter(p => p.id !== id);
+    localStorage.setItem('diario_persone', JSON.stringify(filteredPersone));
+    return true;
+  } catch (e) {
+    console.error("Errore cancellazione persona:", e);
+    return false;
+  }
+}
+
 // --- PASSIONI ---
 
 export function getPassioni() {
@@ -115,6 +140,7 @@ export function getPassioni() {
     const passioni = localStorage.getItem('diario_passioni');
     return passioni ? JSON.parse(passioni) : [];
   } catch (e) {
+    console.error("Errore lettura passioni dal LocalStorage:", e);
     return [];
   }
 }
@@ -136,4 +162,16 @@ export function addPassione(nome, emoji = '⭐') {
 
   localStorage.setItem('diario_passioni', JSON.stringify(passioni));
   return true;
+}
+
+export function deletePassione(id) {
+  try {
+    const passioni = getPassioni();
+    const filteredPassioni = passioni.filter(p => p.id !== id);
+    localStorage.setItem('diario_passioni', JSON.stringify(filteredPassioni));
+    return true;
+  } catch (e) {
+    console.error("Errore cancellazione passione:", e);
+    return false;
+  }
 }

@@ -6,10 +6,13 @@ import {
   getMemories, 
   saveMemory, 
   updateMemoryText, 
+  deleteMemory,
   getPersone, 
   addPersona, 
+  deletePersona,
   getPassioni, 
-  addPassione 
+  addPassione,
+  deletePassione
 } from './storage.js';
 
 import { ascoltaTesto, avviaDettaturaVocale } from './speech.js';
@@ -23,11 +26,19 @@ let ricordoApertoId = null;
 let currentImageBase64 = null;
 let activeModalType = null;
 
-// Stato paginazione ricordi (No-Scroll: 3 per pagina)
-let paginaCorrenteRicordi = 0;
-const ELEMENTI_PER_PAGINA = 3;
+// Stato della cancellazione rassicurante
+let itemToDeleteType = null; // 'ricordo' | 'persona' | 'passione'
+let itemToDeleteId = null;
 
-// Aggiorna data dinamica
+// Stato paginazione no-scroll
+let paginaCorrenteRicordi = 0;
+const ELEMENTI_PER_PAGINA_RICORDI = 3;
+
+let paginaCorrentePersone = 0;
+let paginaCorrentePassioni = 0;
+const ELEMENTI_PER_PAGINA_GRID = 3; // 3 schede + 1 tasto '+' = 4 elementi (griglia 4 colonne)
+
+// Imposta e aggiorna la data mostrata nell'intestazione
 function setCurrentData() {
   const oggi = new Date();
   const dayOptions = { weekday: 'long' };
@@ -46,7 +57,7 @@ function setCurrentData() {
   }
 }
 
-// Navigazione viste
+// Navigazione dinamica tra le schermate
 function showViewById(idView) {
   const allViews = document.querySelectorAll('.view-section');
   const allMenuButtons = document.querySelectorAll('.menu-btn');
@@ -76,6 +87,31 @@ function showViewById(idView) {
   if (idView === 'view-passioni') renderPassioni();
 }
 
+// Apertura modale di conferma cancellazione con tono rassicurante
+function askDeleteConfirmation(type, id, nomeOggetto = '') {
+  itemToDeleteType = type;
+  itemToDeleteId = id;
+
+  const modal = document.getElementById('confirm-modal');
+  const title = document.getElementById('confirm-modal-title');
+  const desc = document.getElementById('confirm-modal-desc');
+
+  if (!modal || !title || !desc) return;
+
+  if (type === 'ricordo') {
+    title.textContent = "Vuoi togliere questo ricordo? 🌸";
+    desc.textContent = "Non ti preoccupare: se non vuoi più vedere questo ricordo, possiamo cancellarlo insieme con calma. Potrai scriverne sempre di nuovi quando vorrai!";
+  } else if (type === 'persona') {
+    title.textContent = `Vuoi togliere ${nomeOggetto}? 🌸`;
+    desc.textContent = "Non ti preoccupare: se vuoi togliere questa persona cara dall'elenco, possiamo farlo con calma. Potrai aggiungerla di nuovo in qualsiasi momento!";
+  } else if (type === 'passione') {
+    title.textContent = `Vuoi togliere ${nomeOggetto}? 🌸`;
+    desc.textContent = "Non ti preoccupare: se vuoi togliere questa passione, possiamo farlo con serenità. Potrai sempre aggiungerne di nuove quando vorrai!";
+  }
+
+  modal.classList.remove('hidden');
+}
+
 // Rendering Ricordi Paginato (Max 3 per schermata a zero-scroll)
 function renderSavedMemories() {
   const listContainer = document.getElementById('memories-list-container');
@@ -91,7 +127,7 @@ function renderSavedMemories() {
     memories = memories.filter(m => m.fascia === filtroFasciaAttivo);
   }
 
-  const totalePagine = Math.ceil(memories.length / ELEMENTI_PER_PAGINA) || 1;
+  const totalePagine = Math.ceil(memories.length / ELEMENTI_PER_PAGINA_RICORDI) || 1;
 
   if (paginaCorrenteRicordi >= totalePagine) paginaCorrenteRicordi = totalePagine - 1;
   if (paginaCorrenteRicordi < 0) paginaCorrenteRicordi = 0;
@@ -114,9 +150,8 @@ function renderSavedMemories() {
     return;
   }
 
-  // Estrazione tranche di 3 ricordi
-  const inizio = paginaCorrenteRicordi * ELEMENTI_PER_PAGINA;
-  const recenti = memories.slice(inizio, inizio + ELEMENTI_PER_PAGINA);
+  const inizio = paginaCorrenteRicordi * ELEMENTI_PER_PAGINA_RICORDI;
+  const recenti = memories.slice(inizio, inizio + ELEMENTI_PER_PAGINA_RICORDI);
 
   listContainer.innerHTML = recenti.map(m => `
     <div class="recent-card clickable-card" data-id="${m.id}" style="cursor:pointer;">
@@ -125,7 +160,6 @@ function renderSavedMemories() {
     </div>
   `).join('');
 
-  // Aggiornamento stato controlli paginazione
   if (pageIndicator) pageIndicator.textContent = `Pagina ${paginaCorrenteRicordi + 1} di ${totalePagine}`;
   if (btnPrev) btnPrev.disabled = paginaCorrenteRicordi === 0;
   if (btnNext) btnNext.disabled = paginaCorrenteRicordi >= totalePagine - 1;
@@ -138,6 +172,7 @@ function renderSavedMemories() {
   });
 }
 
+// Apertura Dettaglio Ricordo
 function openMemoryDetail(id) {
   const memories = getMemories();
   const memory = memories.find(m => m.id === id);
@@ -169,14 +204,27 @@ function openMemoryDetail(id) {
   showViewById('view-read-memory');
 }
 
-// Rendering Persone
+// Rendering Persone Paginato (Max 3 schede + tasto '+')
 function renderPersone() {
   const container = document.getElementById('persone-list-container');
+  const btnPrev = document.getElementById('btn-prev-persone');
+  const btnNext = document.getElementById('btn-next-persone');
+  const pageIndicator = document.getElementById('page-indicator-persone');
+
   if (!container) return;
 
   const persone = getPersone();
-  let cardsHtml = persone.map(p => `
+  const totalePagine = Math.ceil(persone.length / ELEMENTI_PER_PAGINA_GRID) || 1;
+
+  if (paginaCorrentePersone >= totalePagine) paginaCorrentePersone = totalePagine - 1;
+  if (paginaCorrentePersone < 0) paginaCorrentePersone = 0;
+
+  const inizio = paginaCorrentePersone * ELEMENTI_PER_PAGINA_GRID;
+  const personeVisibili = persone.slice(inizio, inizio + ELEMENTI_PER_PAGINA_GRID);
+
+  let cardsHtml = personeVisibili.map(p => `
     <div class="person-card">
+      <button class="btn-delete-card btn-delete-persona" data-id="${p.id}" data-name="${p.nome}" title="Elimina persona">🗑️</button>
       <div class="avatar-placeholder">${p.emoji}</div>
       <h3 class="person-name">${p.nome}</h3>
       <p class="person-role">${p.ruolo}</p>
@@ -194,23 +242,51 @@ function renderPersone() {
   `;
 
   container.innerHTML = cardsHtml;
+
+  if (pageIndicator) pageIndicator.textContent = `Pagina ${paginaCorrentePersone + 1} di ${totalePagine}`;
+  if (btnPrev) btnPrev.disabled = paginaCorrentePersone === 0;
+  if (btnNext) btnNext.disabled = paginaCorrentePersone >= totalePagine - 1;
+
   document.getElementById('btn-add-persona')?.addEventListener('click', () => openModal('persona'));
+
   document.querySelectorAll('#persone-list-container .btn-speak-item').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const text = e.currentTarget.getAttribute('data-text');
       if (text) ascoltaTesto(text);
     });
   });
+
+  document.querySelectorAll('.btn-delete-persona').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = Number(e.currentTarget.getAttribute('data-id'));
+      const nome = e.currentTarget.getAttribute('data-name') || 'questa persona';
+      askDeleteConfirmation('persona', id, nome);
+    });
+  });
 }
 
-// Rendering Passioni
+// Rendering Passioni Paginato (Max 3 schede + tasto '+')
 function renderPassioni() {
   const container = document.getElementById('passioni-list-container');
+  const btnPrev = document.getElementById('btn-prev-passioni');
+  const btnNext = document.getElementById('btn-next-passioni');
+  const pageIndicator = document.getElementById('page-indicator-passioni');
+
   if (!container) return;
 
   const passioni = getPassioni();
-  let cardsHtml = passioni.map(p => `
+  const totalePagine = Math.ceil(passioni.length / ELEMENTI_PER_PAGINA_GRID) || 1;
+
+  if (paginaCorrentePassioni >= totalePagine) paginaCorrentePassioni = totalePagine - 1;
+  if (paginaCorrentePassioni < 0) paginaCorrentePassioni = 0;
+
+  const inizio = paginaCorrentePassioni * ELEMENTI_PER_PAGINA_GRID;
+  const passioniVisibili = passioni.slice(inizio, inizio + ELEMENTI_PER_PAGINA_GRID);
+
+  let cardsHtml = passioniVisibili.map(p => `
     <div class="hobby-card">
+      <button class="btn-delete-card btn-delete-passione" data-id="${p.id}" data-name="${p.nome}" title="Elimina passione">🗑️</button>
       <span class="hobby-icon">${p.emoji}</span>
       <h3 class="hobby-name">${p.nome}</h3>
       <button class="tool-btn btn-speak-item" data-text="${p.nome}">
@@ -227,16 +303,31 @@ function renderPassioni() {
   `;
 
   container.innerHTML = cardsHtml;
+
+  if (pageIndicator) pageIndicator.textContent = `Pagina ${paginaCorrentePassioni + 1} di ${totalePagine}`;
+  if (btnPrev) btnPrev.disabled = paginaCorrentePassioni === 0;
+  if (btnNext) btnNext.disabled = paginaCorrentePassioni >= totalePagine - 1;
+
   document.getElementById('btn-add-passione')?.addEventListener('click', () => openModal('passione'));
+
   document.querySelectorAll('#passioni-list-container .btn-speak-item').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const text = e.currentTarget.getAttribute('data-text');
       if (text) ascoltaTesto(text);
     });
   });
+
+  document.querySelectorAll('.btn-delete-passione').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = Number(e.currentTarget.getAttribute('data-id'));
+      const nome = e.currentTarget.getAttribute('data-name') || 'questa passione';
+      askDeleteConfirmation('passione', id, nome);
+    });
+  });
 }
 
-// Modali per aggiunta manuale
+// Finestra Modale per Aggiunta Manuale (Persona o Passione)
 function openModal(type) {
   activeModalType = type;
   const modal = document.getElementById('custom-modal');
@@ -273,7 +364,7 @@ function closeModal() {
   activeModalType = null;
 }
 
-// Inizializzazione Event Listeners
+// Inizializzazione Event Listener al caricamento del DOM
 document.addEventListener('DOMContentLoaded', () => {
   setCurrentData();
   caricaPaletteIniziale();
@@ -297,11 +388,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Filtri Categorie Ricordi
+  // Filtri Categorie Ricordi (Mattina, Pomeriggio, Sera)
   document.querySelectorAll('.cat-btn').forEach(catBtn => {
     catBtn.addEventListener('click', (e) => {
       const fasciaSelezionata = e.currentTarget.getAttribute('data-filter');
-      paginaCorrenteRicordi = 0; // Reset alla prima pagina al cambio filtro
+      paginaCorrenteRicordi = 0;
 
       if (filtroFasciaAttivo === fasciaSelezionata) {
         filtroFasciaAttivo = null;
@@ -328,7 +419,33 @@ document.addEventListener('DOMContentLoaded', () => {
     renderSavedMemories();
   });
 
-  // Selezione Emozioni
+  // Paginazione Persone
+  document.getElementById('btn-prev-persone')?.addEventListener('click', () => {
+    if (paginaCorrentePersone > 0) {
+      paginaCorrentePersone--;
+      renderPersone();
+    }
+  });
+
+  document.getElementById('btn-next-persone')?.addEventListener('click', () => {
+    paginaCorrentePersone++;
+    renderPersone();
+  });
+
+  // Paginazione Passioni
+  document.getElementById('btn-prev-passioni')?.addEventListener('click', () => {
+    if (paginaCorrentePassioni > 0) {
+      paginaCorrentePassioni--;
+      renderPassioni();
+    }
+  });
+
+  document.getElementById('btn-next-passioni')?.addEventListener('click', () => {
+    paginaCorrentePassioni++;
+    renderPassioni();
+  });
+
+  // Selezione Emozione Giornaliera
   document.querySelectorAll('.emotion-card').forEach(card => {
     if (card.getAttribute('data-emotion') === emozioneSelezionataOggi) {
       card.classList.add('selected-emotion');
@@ -349,7 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Selettore Palette Manuale
+  // Selettore Manuale della Palette Cromatica
   document.querySelectorAll('.palette-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const tema = e.currentTarget.getAttribute('data-theme');
@@ -358,7 +475,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Apertura Creazione Ricordo
+  // Apertura Schermata Creazione Ricordo dalla Dashboard
   document.querySelectorAll('.add-memory-btn').forEach(pulsante => {
     pulsante.addEventListener('click', (e) => {
       const range = e.currentTarget.getAttribute('data-fascia') || 'Mattina';
@@ -370,7 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Caricamento Immagine Locale
+  // Acquisizione Immagine Locale (Base64)
   document.getElementById('btn-mode-image')?.addEventListener('click', () => {
     fileInput?.click();
   });
@@ -396,7 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (previewImg) previewImg.src = '';
   });
 
-  // Salvataggio Ricordo
+  // Salvataggio ed Elaborazione con Gemini
   document.getElementById('btn-save-memory')?.addEventListener('click', async () => {
     const fasciaCorrente = textSelectedRange ? textSelectedRange.textContent : 'Mattina';
     const testoDaSalvare = inputTesto ? inputTesto.value.trim() : '';
@@ -414,13 +531,10 @@ document.addEventListener('DOMContentLoaded', () => {
         btnSave.disabled = true;
       }
 
-      // Invio solo testo ed emozione a Gemini (Privacy-Safe)
       const risultato = await elaboraRicordoCompleto(testoDaSalvare, emozioneSelezionataOggi);
 
-      // Salva nel LocalStorage
       saveMemory(fasciaCorrente, risultato.testoCorretto, emozioneSelezionataOggi, currentImageBase64);
 
-      // Aggiunge persone e passioni
       if (risultato.persone && Array.isArray(risultato.persone)) {
         risultato.persone.forEach(p => {
           if (p && p.nome) addPersona(p.nome, p.ruolo || 'Caregiver/Amico', p.emoji || '👤');
@@ -433,22 +547,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
 
-      // Applica palette suggerita
       if (risultato.paletteConsigliata) {
         applicaPalette(risultato.paletteConsigliata);
       }
 
-      // Reset campi
       if (inputTesto) inputTesto.value = ''; 
       currentImageBase64 = null;
       if (fileInput) fileInput.value = '';
       if (previewWrapper) previewWrapper.classList.add('hidden');
       
       filtroFasciaAttivo = null;
-      paginaCorrenteRicordi = 0; // Mostra i più recenti in prima pagina
+      paginaCorrenteRicordi = 0;
       showViewById('view-ricordi');
-
-      // Notifica Toast motivazionale di Gemini
       showToastAlert(risultato.messaggioAlert, emozioneSelezionataOggi);
 
     } catch (err) {
@@ -467,7 +577,58 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Semplificazione Easy-Read
+  // Gestione Modale di Eliminazione Rassicurante (Ricordi, Persone, Passioni)
+  const confirmModal = document.getElementById('confirm-modal');
+  const btnCancelDelete = document.getElementById('btn-cancel-delete');
+  const btnConfirmDelete = document.getElementById('btn-confirm-delete');
+
+  // Trigger cancellazione ricordo dal dettaglio
+  document.getElementById('btn-delete-memory')?.addEventListener('click', () => {
+    if (ricordoApertoId) {
+      askDeleteConfirmation('ricordo', ricordoApertoId);
+    }
+  });
+
+  // Tasto "No, tienilo": chiude la modale senza toccare i dati
+  btnCancelDelete?.addEventListener('click', () => {
+    confirmModal?.classList.add('hidden');
+    itemToDeleteType = null;
+    itemToDeleteId = null;
+  });
+
+  // Tasto "Sì, eliminalo": esegue la cancellazione dell'entità specifica
+  btnConfirmDelete?.addEventListener('click', () => {
+    if (!itemToDeleteType || itemToDeleteId === null) {
+      confirmModal?.classList.add('hidden');
+      return;
+    }
+
+    if (itemToDeleteType === 'ricordo') {
+      deleteMemory(itemToDeleteId);
+      ricordoApertoId = null;
+      showToastAlert("Ricordo tolto con successo! 🌸", "🗑️");
+      showViewById('view-ricordi');
+    } else if (itemToDeleteType === 'persona') {
+      deletePersona(itemToDeleteId);
+      renderPersone();
+      showToastAlert("Persona tolta dall'elenco! 🌸", "🗑️");
+    } else if (itemToDeleteType === 'passione') {
+      deletePassione(itemToDeleteId);
+      renderPassioni();
+      showToastAlert("Passione tolta dall'elenco! 🌸", "🗑️");
+    }
+
+    confirmModal?.classList.add('hidden');
+    itemToDeleteType = null;
+    itemToDeleteId = null;
+  });
+
+  // Navigazione a ritroso: da Dettaglio a Elenco Ricordi
+  document.getElementById('btn-back-to-memories')?.addEventListener('click', () => {
+    showViewById('view-ricordi');
+  });
+
+  // Semplificazione Easy-Read su richiesta
   document.getElementById('btn-simplify-ia')?.addEventListener('click', async () => {
     const textElem = document.getElementById('read-memory-text');
     const btnSimplify = document.getElementById('btn-simplify-ia');
@@ -497,7 +658,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Dettatura Vocale
+  // Dettatura Vocale (Speech-to-Text)
   document.getElementById('btn-mode-voice')?.addEventListener('click', () => {
     const btnVoice = document.getElementById('btn-mode-voice');
     avviaDettaturaVocale(
@@ -507,23 +668,21 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   });
 
-  // Lettura Vocale Ricordo
+  // Lettura Vocale Ricordo (Text-to-Speech)
   document.getElementById('btn-read-aloud')?.addEventListener('click', () => {
     const memoryText = document.getElementById('read-memory-text')?.textContent;
     if (memoryText) ascoltaTesto(memoryText);
   });
 
-  // Torna alla Home Universale
+  // Ritorno universale alla Home
   document.addEventListener('click', (e) => {
-    const eButtonHome = e.target.closest('.btn-go-home') || 
-                          e.target.closest('#btn-main-home') ||
-                          e.target.id === 'btn-back-to-home' || 
-                          e.target.id === 'btn-cancel-memory';
+    const eButtonHome = e.target.closest('.main-home-btn') || 
+                        e.target.id === 'btn-cancel-memory';
 
     if (eButtonHome) showViewById('view-home');
   });
 
-  // Modale manuale
+  // Gestione Modale Inserimento Manuale
   document.getElementById('btn-modal-cancel')?.addEventListener('click', closeModal);
   document.getElementById('btn-modal-confirm')?.addEventListener('click', () => {
     const inputEmoji = document.getElementById('modal-input-emoji');
@@ -560,7 +719,7 @@ document.addEventListener('DOMContentLoaded', () => {
     closeModal();
   });
 
-  // Avvio: render iniziale
+  // Avvio: caricamento e render iniziale di tutte le sezioni
   renderSavedMemories();
   renderPersone();
   renderPassioni();

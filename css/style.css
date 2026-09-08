@@ -981,3 +981,44 @@ body {
 .toast-notification.border-happy { border-left-color: #22c55e; }
 .toast-notification.border-sad { border-left-color: #eab308; }
 .toast-notification.border-angry { border-left-color: #f97316; }
+
+/* Pulsante Elimina nella schermata Leggi Ricordo */
+.tool-btn.btn-delete-danger {
+  background-color: #fee2e2;
+  border-color: #fca5a5;
+  color: #b91c1c;
+}
+
+.tool-btn.btn-delete-danger:hover {
+  background-color: #fecaca;
+  border-color: #ef4444;
+}
+
+/* Posizionamento relativo necessario per il cestino sulle card */
+.person-card, .hobby-card {
+  position: relative;
+}
+
+/* Pulsantino cestino in alto a destra su Persone e Passioni */
+.btn-delete-card {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: #f1f5f9;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.btn-delete-card:hover {
+  background-color: #fee2e2;
+  border-color: #ef4444;
+  transform: scale(1.1);
+}

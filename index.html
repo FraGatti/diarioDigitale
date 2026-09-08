@@ -122,6 +122,7 @@
             <!-- 3. VISTA LEGGI RICORDO (DETTAGLIO SINGOLO RICORDO) -->
             <div id="view-read-memory" class="view-section hidden">
                 <div class="page-sub-header">
+                    <button class="btn-go-home" id="btn-back-to-memories" type="button">‹ Torna ai ricordi</button>
                     <h2 class="page-title" id="read-memory-title">Il tuo ricordo</h2>
                 </div>
 
@@ -142,6 +143,7 @@
                 <div class="read-memory-actions">
                     <button class="tool-btn" id="btn-read-aloud" type="button">🔊 Ascolta ricordo</button>
                     <button class="tool-btn active-ia" id="btn-simplify-ia" type="button">✨ Semplifica con IA (Easy-Read)</button>
+                    <button class="tool-btn btn-delete-danger" id="btn-delete-memory" type="button">🗑️ Elimina</button>
                 </div>
             </div>
 
@@ -239,6 +241,12 @@
                 <div class="cards-grid" id="persone-list-container">
                     <!-- Popolato dinamicamente da app.js -->
                 </div>
+                <!-- Paginazione Persone (No-Scroll) -->
+                <div class="ricordi-footer">
+                    <button class="btn-page-nav" id="btn-prev-persone" type="button">‹ Precedenti</button>
+                    <span id="page-indicator-persone" class="page-indicator-text">Pagina 1 di 1</span>
+                    <button class="btn-page-nav" id="btn-next-persone" type="button">Successivi ›</button>
+                </div>
             </div>
 
             <!-- 7. VISTA LE MIE PASSIONI -->
@@ -248,6 +256,12 @@
                 </div>
                 <div class="cards-grid" id="passioni-list-container">
                     <!-- Popolato dinamicamente da app.js -->
+                </div>
+                <!-- Paginazione Passioni (No-Scroll) -->
+                <div class="ricordi-footer">
+                    <button class="btn-page-nav" id="btn-prev-passioni" type="button">‹ Precedenti</button>
+                    <span id="page-indicator-passioni" class="page-indicator-text">Pagina 1 di 1</span>
+                    <button class="btn-page-nav" id="btn-next-passioni" type="button">Successivi ›</button>
                 </div>
             </div>
 
@@ -301,6 +315,22 @@
                 <div class="modal-actions">
                     <button class="action-btn btn-back" id="btn-modal-cancel" type="button">Annulla</button>
                     <button class="action-btn btn-save" id="btn-modal-confirm" type="button">➕ Aggiungi</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODALE DI CONFERMA ELIMINAZIONE ACCESSIBILE E RASSICURANTE -->
+        <div id="confirm-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+            <div class="modal-card">
+                <h3 class="modal-title" id="confirm-modal-title">Vuoi togliere questo elemento? 🌸</h3>
+                <div class="modal-body">
+                    <p id="confirm-modal-desc" style="font-size: 1.1rem; line-height: 1.5; color: #334155;">
+                        Non ti preoccupare: se non vuoi più vederlo, possiamo toglierlo insieme con calma. Potrai aggiungerne sempre di nuovi quando vorrai!
+                    </p>
+                </div>
+                <div class="modal-actions" style="margin-top: 12px; gap: 14px;">
+                    <button class="action-btn btn-back" id="btn-cancel-delete" type="button">No, tienilo</button>
+                    <button class="action-btn btn-delete-confirm" id="btn-confirm-delete" type="button">Sì, eliminalo</button>
                 </div>
             </div>
         </div>
