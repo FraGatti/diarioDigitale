@@ -8,17 +8,14 @@
 </head>
 <body class="theme-blu">
     <div class="app-container">
-        
-        <!-- ALERT TOAST ACCESSIBILE -->
+
         <div id="app-toast" class="toast-notification" role="status" aria-live="polite">
             <span id="toast-icon" class="toast-emoji">🌟</span>
             <div id="toast-message" class="toast-text">Ricordo salvato!</div>
         </div>
 
-        <!-- INPUT FILE NASCOSTO PER CARICARE LE FOTO IN LOCALE -->
         <input type="file" id="hidden-file-input" accept="image/*" style="display: none;">
 
-        <!-- INTESTAZIONE FISSA -->
         <header class="app-header">
             <div class="top-bar">
                 <div class="brand">
@@ -65,10 +62,7 @@
             </nav>
         </header>
 
-        <!-- AREA CENTRALE DINAMICA -->
         <main id="main-content" class="main-content">
-            
-            <!-- 1. VISTA HOME (FASCE ORARIE) -->
             <div id="view-home" class="view-section hidden">
                 <div class="dashboard-grid">
                     <section class="time-card card-morning">
@@ -88,8 +82,6 @@
                     </section>
                 </div>
             </div>
-
-            <!-- 2. VISTA I MIEI RICORDI -->
             <div id="view-ricordi" class="view-section hidden">
                 <div class="ricordi-categories-grid">
                     <button class="cat-btn cat-morning" data-filter="Mattina" type="button">
@@ -107,11 +99,9 @@
                 </div>
 
                 <h3 class="ricordi-subtitle">Ricordi recenti:</h3>
-                
-                <!-- Contenitore delle 3 Card -->
+
                 <div class="ricordi-recent-grid" id="memories-list-container"></div>
 
-                <!-- Barra Paginazione Ricordi -->
                 <div class="ricordi-footer">
                     <button class="btn-page-nav" id="btn-prev-page" type="button">‹ Precedenti</button>
                     <span id="page-indicator" class="page-indicator-text">Pagina 1 di 1</span>
@@ -119,7 +109,6 @@
                 </div>
             </div>
 
-            <!-- 3. VISTA LEGGI RICORDO (DETTAGLIO SINGOLO RICORDO) -->
             <div id="view-read-memory" class="view-section hidden">
                 <div class="page-sub-header">
                     <button class="btn-go-home" id="btn-back-to-memories" type="button">‹ Torna ai ricordi</button>
@@ -135,7 +124,6 @@
                     
                     <div class="read-memory-body">
                         <p id="read-memory-text" class="full-memory-text">Caricamento...</p>
-                        <!-- Foto associata al ricordo (salvata solo in locale) -->
                         <img id="read-memory-image" class="memory-detail-image hidden" alt="Foto del ricordo">
                     </div>
                 </div>
@@ -147,7 +135,6 @@
                 </div>
             </div>
 
-            <!-- 4. VISTA CREA RICORDO (SCRITTURA, VOCE, FOTO) -->
             <div id="view-create-memory" class="view-section hidden">
                 <div class="page-sub-header">
                     <h2 class="page-title">Scrivi il tuo ricordo</h2>
@@ -172,7 +159,6 @@
                 <div class="text-area-container">
                     <textarea id="memory-text-input" placeholder="Scrivi o detta qui il tuo ricordo... ✨"></textarea>
                     
-                    <!-- Anteprima Foto caricata -->
                     <div id="image-preview-wrapper" class="image-preview-container hidden">
                         <img id="image-preview-img" src="" alt="Anteprima foto">
                         <button type="button" id="btn-delete-img" class="btn-remove-img" title="Rimuovi foto">✕</button>
@@ -185,7 +171,6 @@
                 </div>
             </div>
 
-            <!-- 5. VISTA COME MI SENTO (SELEZIONE EMOZIONI) -->
             <div id="view-emozioni" class="view-section hidden">
                 <div class="page-sub-header">
                     <h2 class="page-title">Come mi sento oggi?</h2>
@@ -233,15 +218,12 @@
                 </div>
             </div>
 
-            <!-- 6. VISTA LE MIE PERSONE -->
             <div id="view-persone" class="view-section hidden">
                 <div class="page-sub-header">
                     <h2 class="page-title">Le mie persone care</h2>
                 </div>
                 <div class="cards-grid" id="persone-list-container">
-                    <!-- Popolato dinamicamente da app.js -->
                 </div>
-                <!-- Paginazione Persone (No-Scroll) -->
                 <div class="ricordi-footer">
                     <button class="btn-page-nav" id="btn-prev-persone" type="button">‹ Precedenti</button>
                     <span id="page-indicator-persone" class="page-indicator-text">Pagina 1 di 1</span>
@@ -249,15 +231,12 @@
                 </div>
             </div>
 
-            <!-- 7. VISTA LE MIE PASSIONI -->
             <div id="view-passioni" class="view-section hidden">
                 <div class="page-sub-header">
                     <h2 class="page-title">Le mie passioni</h2>
                 </div>
                 <div class="cards-grid" id="passioni-list-container">
-                    <!-- Popolato dinamicamente da app.js -->
                 </div>
-                <!-- Paginazione Passioni (No-Scroll) -->
                 <div class="ricordi-footer">
                     <button class="btn-page-nav" id="btn-prev-passioni" type="button">‹ Precedenti</button>
                     <span id="page-indicator-passioni" class="page-indicator-text">Pagina 1 di 1</span>
@@ -265,7 +244,6 @@
                 </div>
             </div>
 
-            <!-- 8. VISTA AIUTO & PERSONALIZZAZIONE COLORI -->
             <div id="view-aiuto" class="view-section hidden">
                 <div class="page-sub-header">
                     <h2 class="page-title">Aiuto & Personalizzazione</h2>
@@ -294,7 +272,6 @@
 
         </main>
 
-        <!-- MODALE ACCESSIBILE PER AGGIUNTA MANUALE (PERSONA / PASSIONE) -->
         <div id="custom-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
             <div class="modal-card">
                 <h3 class="modal-title" id="modal-title">Aggiungi Elemento</h3>
@@ -319,7 +296,6 @@
             </div>
         </div>
 
-        <!-- MODALE DI CONFERMA ELIMINAZIONE ACCESSIBILE E RASSICURANTE -->
         <div id="confirm-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
             <div class="modal-card">
                 <h3 class="modal-title" id="confirm-modal-title">Vuoi togliere questo elemento? 🌸</h3>
@@ -336,8 +312,7 @@
         </div>
 
     </div>
-
-    <!-- ENTRY POINT JAVASCRIPT MODULARE -->
+    
     <script type="module" src="javascript/app.js"></script>
 </body>
 </html>

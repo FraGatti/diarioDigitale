@@ -1,10 +1,3 @@
-// ==========================================
-// MODULO STORAGE & PERSISTENZA DATI (LOCALSTORAGE)
-// ==========================================
-
-/**
- * Normalizza una stringa per il confronto semantico anti-duplicato
- */
 export function normalizzaTesto(testo) {
   if (!testo) return '';
   return testo
@@ -16,9 +9,6 @@ export function normalizzaTesto(testo) {
     .trim();
 }
 
-/**
- * Controlla se due entità sono equivalenti o contengono la stessa parola chiave
- */
 export function sonoEntitaSimili(nome1, nome2) {
   const n1 = normalizzaTesto(nome1);
   const n2 = normalizzaTesto(nome2);
@@ -27,8 +17,6 @@ export function sonoEntitaSimili(nome1, nome2) {
   if (n1.includes(n2) || n2.includes(n1)) return true;
   return false;
 }
-
-// --- RICORDI ---
 
 export function getMemories() {
   try {
@@ -48,7 +36,7 @@ export function saveMemory(fascia, testo, emozione, immagine = null) {
       fascia: fascia,
       testo: testo,
       emozione: emozione || '😊',
-      immagine: immagine // Memorizzato esclusivamente in locale
+      immagine: immagine 
     };
 
     const currentMemories = getMemories();
@@ -89,8 +77,6 @@ export function deleteMemory(id) {
   }
 }
 
-// --- PERSONE ---
-
 export function getPersone() {
   try {
     const persone = localStorage.getItem('diario_persone');
@@ -107,7 +93,7 @@ export function addPersona(nome, ruolo = 'Caregiver/Amico', emoji = '👤') {
   const persone = getPersone();
 
   if (persone.some(p => sonoEntitaSimili(p.nome, nomePulito))) {
-    return false; // Evita duplicati
+    return false;
   }
 
   persone.push({
@@ -133,8 +119,6 @@ export function deletePersona(id) {
   }
 }
 
-// --- PASSIONI ---
-
 export function getPassioni() {
   try {
     const passioni = localStorage.getItem('diario_passioni');
@@ -151,7 +135,7 @@ export function addPassione(nome, emoji = '⭐') {
   const passioni = getPassioni();
 
   if (passioni.some(p => sonoEntitaSimili(p.nome, nomePulito))) {
-    return false; // Evita duplicati
+    return false; 
   }
 
   passioni.push({

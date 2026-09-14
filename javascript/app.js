@@ -1,7 +1,3 @@
-// ==========================================
-// CONTROLLER PRINCIPALE APPLICAZIONE
-// ==========================================
-
 import { 
   getMemories, 
   saveMemory, 
@@ -19,26 +15,22 @@ import { ascoltaTesto, avviaDettaturaVocale } from './speech.js';
 import { applicaPalette, caricaPaletteIniziale, showToastAlert } from './theme.js';
 import { elaboraRicordoCompleto, semplificaInEasyRead } from './gemini_service.js';
 
-// Stato locale dell'applicazione
 let emozioneSelezionataOggi = localStorage.getItem('diario_emozione_oggi') || '😊';
 let filtroFasciaAttivo = null; 
 let ricordoApertoId = null;
 let currentImageBase64 = null;
 let activeModalType = null;
 
-// Stato della cancellazione rassicurante
-let itemToDeleteType = null; // 'ricordo' | 'persona' | 'passione'
+let itemToDeleteType = null;
 let itemToDeleteId = null;
 
-// Stato paginazione no-scroll
 let paginaCorrenteRicordi = 0;
 const ELEMENTI_PER_PAGINA_RICORDI = 3;
 
 let paginaCorrentePersone = 0;
 let paginaCorrentePassioni = 0;
-const ELEMENTI_PER_PAGINA_GRID = 3; // 3 schede + 1 tasto '+' = 4 elementi (griglia 4 colonne)
+const ELEMENTI_PER_PAGINA_GRID = 3; 
 
-// Imposta e aggiorna la data mostrata nell'intestazione
 function setCurrentData() {
   const oggi = new Date();
   const dayOptions = { weekday: 'long' };
@@ -57,7 +49,6 @@ function setCurrentData() {
   }
 }
 
-// Navigazione dinamica tra le schermate
 function showViewById(idView) {
   const allViews = document.querySelectorAll('.view-section');
   const allMenuButtons = document.querySelectorAll('.menu-btn');
@@ -87,7 +78,6 @@ function showViewById(idView) {
   if (idView === 'view-passioni') renderPassioni();
 }
 
-// Apertura modale di conferma cancellazione con tono rassicurante
 function askDeleteConfirmation(type, id, nomeOggetto = '') {
   itemToDeleteType = type;
   itemToDeleteId = id;
@@ -112,7 +102,6 @@ function askDeleteConfirmation(type, id, nomeOggetto = '') {
   modal.classList.remove('hidden');
 }
 
-// Rendering Ricordi Paginato (Max 3 per schermata a zero-scroll)
 function renderSavedMemories() {
   const listContainer = document.getElementById('memories-list-container');
   const btnPrev = document.getElementById('btn-prev-page');
@@ -172,7 +161,6 @@ function renderSavedMemories() {
   });
 }
 
-// Apertura Dettaglio Ricordo
 function openMemoryDetail(id) {
   const memories = getMemories();
   const memory = memories.find(m => m.id === id);
@@ -204,7 +192,6 @@ function openMemoryDetail(id) {
   showViewById('view-read-memory');
 }
 
-// Rendering Persone Paginato (Max 3 schede + tasto '+')
 function renderPersone() {
   const container = document.getElementById('persone-list-container');
   const btnPrev = document.getElementById('btn-prev-persone');
@@ -266,7 +253,6 @@ function renderPersone() {
   });
 }
 
-// Rendering Passioni Paginato (Max 3 schede + tasto '+')
 function renderPassioni() {
   const container = document.getElementById('passioni-list-container');
   const btnPrev = document.getElementById('btn-prev-passioni');
@@ -327,7 +313,6 @@ function renderPassioni() {
   });
 }
 
-// Finestra Modale per Aggiunta Manuale (Persona o Passione)
 function openModal(type) {
   activeModalType = type;
   const modal = document.getElementById('custom-modal');
@@ -364,7 +349,6 @@ function closeModal() {
   activeModalType = null;
 }
 
-// Inizializzazione Event Listener al caricamento del DOM
 document.addEventListener('DOMContentLoaded', () => {
   setCurrentData();
   caricaPaletteIniziale();
@@ -375,7 +359,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const previewWrapper = document.getElementById('image-preview-wrapper');
   const previewImg = document.getElementById('image-preview-img');
 
-  // Navigazione Menu Principale
   document.querySelectorAll('.menu-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const viewTarget = btn.getAttribute('data-view');
@@ -388,7 +371,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Filtri Categorie Ricordi (Mattina, Pomeriggio, Sera)
   document.querySelectorAll('.cat-btn').forEach(catBtn => {
     catBtn.addEventListener('click', (e) => {
       const fasciaSelezionata = e.currentTarget.getAttribute('data-filter');
@@ -406,7 +388,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Paginazione Ricordi (Precedenti / Successivi)
   document.getElementById('btn-prev-page')?.addEventListener('click', () => {
     if (paginaCorrenteRicordi > 0) {
       paginaCorrenteRicordi--;
@@ -419,7 +400,6 @@ document.addEventListener('DOMContentLoaded', () => {
     renderSavedMemories();
   });
 
-  // Paginazione Persone
   document.getElementById('btn-prev-persone')?.addEventListener('click', () => {
     if (paginaCorrentePersone > 0) {
       paginaCorrentePersone--;
@@ -432,7 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderPersone();
   });
 
-  // Paginazione Passioni
+
   document.getElementById('btn-prev-passioni')?.addEventListener('click', () => {
     if (paginaCorrentePassioni > 0) {
       paginaCorrentePassioni--;
@@ -445,7 +425,6 @@ document.addEventListener('DOMContentLoaded', () => {
     renderPassioni();
   });
 
-  // Selezione Emozione Giornaliera
   document.querySelectorAll('.emotion-card').forEach(card => {
     if (card.getAttribute('data-emotion') === emozioneSelezionataOggi) {
       card.classList.add('selected-emotion');
@@ -466,7 +445,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Selettore Manuale della Palette Cromatica
   document.querySelectorAll('.palette-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const tema = e.currentTarget.getAttribute('data-theme');
@@ -475,7 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Apertura Schermata Creazione Ricordo dalla Dashboard
+
   document.querySelectorAll('.add-memory-btn').forEach(pulsante => {
     pulsante.addEventListener('click', (e) => {
       const range = e.currentTarget.getAttribute('data-fascia') || 'Mattina';
@@ -487,7 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Acquisizione Immagine Locale (Base64)
+
   document.getElementById('btn-mode-image')?.addEventListener('click', () => {
     fileInput?.click();
   });
@@ -513,7 +491,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (previewImg) previewImg.src = '';
   });
 
-  // Salvataggio ed Elaborazione con Gemini
+
   document.getElementById('btn-save-memory')?.addEventListener('click', async () => {
     const fasciaCorrente = textSelectedRange ? textSelectedRange.textContent : 'Mattina';
     const testoDaSalvare = inputTesto ? inputTesto.value.trim() : '';
@@ -577,26 +555,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Gestione Modale di Eliminazione Rassicurante (Ricordi, Persone, Passioni)
+
   const confirmModal = document.getElementById('confirm-modal');
   const btnCancelDelete = document.getElementById('btn-cancel-delete');
   const btnConfirmDelete = document.getElementById('btn-confirm-delete');
 
-  // Trigger cancellazione ricordo dal dettaglio
+
   document.getElementById('btn-delete-memory')?.addEventListener('click', () => {
     if (ricordoApertoId) {
       askDeleteConfirmation('ricordo', ricordoApertoId);
     }
   });
 
-  // Tasto "No, tienilo": chiude la modale senza toccare i dati
   btnCancelDelete?.addEventListener('click', () => {
     confirmModal?.classList.add('hidden');
     itemToDeleteType = null;
     itemToDeleteId = null;
   });
 
-  // Tasto "Sì, eliminalo": esegue la cancellazione dell'entità specifica
   btnConfirmDelete?.addEventListener('click', () => {
     if (!itemToDeleteType || itemToDeleteId === null) {
       confirmModal?.classList.add('hidden');
@@ -623,12 +599,11 @@ document.addEventListener('DOMContentLoaded', () => {
     itemToDeleteId = null;
   });
 
-  // Navigazione a ritroso: da Dettaglio a Elenco Ricordi
+
   document.getElementById('btn-back-to-memories')?.addEventListener('click', () => {
     showViewById('view-ricordi');
   });
 
-  // Semplificazione Easy-Read su richiesta
   document.getElementById('btn-simplify-ia')?.addEventListener('click', async () => {
     const textElem = document.getElementById('read-memory-text');
     const btnSimplify = document.getElementById('btn-simplify-ia');
@@ -658,7 +633,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Dettatura Vocale (Speech-to-Text)
   document.getElementById('btn-mode-voice')?.addEventListener('click', () => {
     const btnVoice = document.getElementById('btn-mode-voice');
     avviaDettaturaVocale(
@@ -668,13 +642,11 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   });
 
-  // Lettura Vocale Ricordo (Text-to-Speech)
   document.getElementById('btn-read-aloud')?.addEventListener('click', () => {
     const memoryText = document.getElementById('read-memory-text')?.textContent;
     if (memoryText) ascoltaTesto(memoryText);
   });
 
-  // Ritorno universale alla Home
   document.addEventListener('click', (e) => {
     const eButtonHome = e.target.closest('.main-home-btn') || 
                         e.target.id === 'btn-cancel-memory';
@@ -682,7 +654,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (eButtonHome) showViewById('view-home');
   });
 
-  // Gestione Modale Inserimento Manuale
   document.getElementById('btn-modal-cancel')?.addEventListener('click', closeModal);
   document.getElementById('btn-modal-confirm')?.addEventListener('click', () => {
     const inputEmoji = document.getElementById('modal-input-emoji');
@@ -719,7 +690,6 @@ document.addEventListener('DOMContentLoaded', () => {
     closeModal();
   });
 
-  // Avvio: caricamento e render iniziale di tutte le sezioni
   renderSavedMemories();
   renderPersone();
   renderPassioni();

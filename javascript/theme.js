@@ -1,12 +1,5 @@
-// ==========================================
-// MODULO INTERFACCIA, TEMI CROMATICI & NOTIFICHE
-// ==========================================
-
 let toastTimeout = null;
 
-/**
- * Applica una palette di colori modificando la classe sul body e memorizzandola in LocalStorage
- */
 export function applicaPalette(nomeTema) {
   const temiValidi = ['theme-blu', 'theme-natura', 'theme-rosa', 'theme-solare'];
   if (!temiValidi.includes(nomeTema)) nomeTema = 'theme-blu';
@@ -24,17 +17,11 @@ export function applicaPalette(nomeTema) {
   });
 }
 
-/**
- * Carica il tema salvato o imposta il tema predefinito
- */
 export function caricaPaletteIniziale() {
   const temaSalvato = localStorage.getItem('diario_palette') || 'theme-blu';
   applicaPalette(temaSalvato);
 }
 
-/**
- * Mostra una notifica accessibile non bloccante con colore calibrato sull'emozione
- */
 export function showToastAlert(messaggio, emoji = '🌟') {
   let toast = document.getElementById('app-toast');
 

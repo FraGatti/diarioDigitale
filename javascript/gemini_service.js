@@ -1,9 +1,6 @@
 import { GEMINI_API_KEY } from './config.js';
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${GEMINI_API_KEY}`;
 
-/**
- * Analizza il testo, corregge errori, estrae persone/passioni, genera l'alert emotivo e consiglia la palette
- */
 export async function elaboraRicordoCompleto(testoGrezzo, emozioneUtente = '😊') {
   if (!testoGrezzo || !testoGrezzo.trim()) {
     return { 
@@ -88,27 +85,24 @@ Rispondi SOLO ed ESCLUSIVAMENTE con un JSON valido con questa struttura esatta:
   }
 }
 
-/**
- * Riformula un testo secondo le regole Easy-Read
- */
 export async function semplificaInEasyRead(testo) {
   if (!testo || !testo.trim()) return testo;
 
   const prompt = `Sei un esperto di accessibilità cognitiva e regole Easy-Read (Facile da Leggere).
-Prendi il seguente testo di un ricordo e semplificalo al massimo per una persona con disabilità cognitiva.
+  Prendi il seguente testo di un ricordo e semplificalo al massimo per una persona con disabilità cognitiva.
 
-Regole Easy-Read:
-1. Usa frasi molto brevi (Soggetto + Verbo + Oggetto).
-2. Usa un vocabolario semplice e quotidiano.
-3. Evita parole astratte o complesse.
-4. Mantieni un tono calmo e rassicurante.
-5. Rispondi ESCLUSIVAMENTE con il testo semplificato, senza note o spiegazioni.
-6. Rimuovi dettagli inutili o complessi, concentrandoti solo sulle informazioni essenziali.
-7. Mantieni il significato originale del testo.
-8. Non aggiungere informazioni o dettagli che non sono presenti nel testo originale.
-9. Evita ogni tipo di gergo.
+  Regole Easy-Read:
+  1. Usa frasi molto brevi (Soggetto + Verbo + Oggetto).
+  2. Usa un vocabolario semplice e quotidiano.
+  3. Evita parole astratte o complesse.
+  4. Mantieni un tono calmo e rassicurante.
+  5. Rispondi ESCLUSIVAMENTE con il testo semplificato, senza note o spiegazioni.
+  6. Rimuovi dettagli inutili o complessi, concentrandoti solo sulle informazioni essenziali.
+  7. Mantieni il significato originale del testo.
+  8. Non aggiungere informazioni o dettagli che non sono presenti nel testo originale.
+  9. Evita ogni tipo di gergo.
 
-Testo da semplificare: "${testo}"`;
+  Testo da semplificare: "${testo}"`;
 
   try {
     const response = await fetch(GEMINI_URL, {
