@@ -1,10 +1,3 @@
-// ==========================================
-// MODULO SERVIZI VOCALI (WEB SPEECH API)
-// ==========================================
-
-/**
- * Riproduce un testo tramite sintesi vocale (Text-To-Speech)
- */
 export function ascoltaTesto(testo) {
   if (!('speechSynthesis' in window)) {
     alert("La sintesi vocale non è supportata dal tuo browser.");
@@ -13,13 +6,10 @@ export function ascoltaTesto(testo) {
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(testo);
   utterance.lang = 'it-IT';
-  utterance.rate = 0.85; // Velocità calibrata per facilitare la comprensione
+  utterance.rate = 0.85;
   window.speechSynthesis.speak(utterance);
 }
 
-/**
- * Avvia il riconoscimento vocale e inserisce il testo nel campo specificato
- */
 export function avviaDettaturaVocale(targetInput, onStartCallback, onEndCallback) {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) {
